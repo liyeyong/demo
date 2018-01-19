@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dal.UserDao">
+
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.User" >
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="INTEGER"/>
+        <result column="birthday" property="birthday" jdbcType="TIMESTAMP"/>
+        <result column="created_time" property="createdTime" jdbcType="TIMESTAMP"/>
+        <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="BaseSql">
+        id, user_name, address, password, mobile, sex, birthday, created_time, updated_time
+    </sql>
+
+    <select id="get" resultMap="BaseResultMap" parameterType="com.example.demo.entity.User">
+        select
+          <include refid="BaseSql"/>
+        from user
+        <where>
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="userName != null">
+                user_name = #{userName, jdbcType=VARCHAR}
+            </if>
+            <if test="password != null">
+                password = #{password, jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.example.demo.entity.User">
+        insert user (user_name,address,password,mobile,birthday,sex)
+        values(#{userName,jdbcType=VARCHAR},
+               #{address,jdbcType=VARCHAR},
+               #{password,jdbcType=VARCHAR},
+               #{mobile,jdbcType=VARCHAR},
+               #{birthday,jdbcType=TIMESTAMP},
+               #{sex,jdbcType=INTEGER}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.demo.entity.User">
+      UPDATE user
+      <if test="useName != null and useName != ''">
+          set user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+        <if test="address != null and address != ''">
+          set address = #{address,jdbcType=VARCHAR},
+      </if>
+        <if test="passowrd != null and passowrd != ''">
+            set passowrd = #{passowrd,jdbcType=VARCHAR},
+        </if>
+        <if test="mobile != null and mobile != ''">
+            set mobile = #{mobile,jdbcType=VARCHAR},
+        </if>
+        <if test="birthday != null">
+            set birthday = #{passowrd,jdbcType=TIMESTAMP},
+        </if>
+        <if test="sex != null">
+            set sex = #{sex,jdbcType=INTEGER},
+        </if>
+        updated_time = CURRENT_TIMESTAMP()
+        <where>
+            id= #{id, jdbcType=INTEGER}
+        </where>
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+
+    </delete>
+
+</mapper>
